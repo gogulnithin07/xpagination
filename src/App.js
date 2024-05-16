@@ -5,21 +5,22 @@ function App() {
   const [data, setData] = useState([]);
   const [counter, setCounter] = useState(10);
   let startI = counter === 10 ? 0 : counter - 10;
-  useEffect(function () {
-    async function getData() {
-      try {
-        const req = await fetch(
-          "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
-        );
-        const res = await req.json();
-        console.log(res);
-        setData((c) => res);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+  useEffect(() => {
     getData();
   }, []);
+  async function getData() {
+    try {
+      const req = await fetch(
+        "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
+      );
+      const res = await req.json();
+      console.log(res);
+      setData((c) => res);
+    } catch (error) {
+      alert("Failed to fetch data");
+      console.error(error);
+    }
+  }
   return (
     <div className="App">
       <div className="container">
@@ -37,13 +38,13 @@ function App() {
             {/* {} */}
             {data.slice(startI, counter).map((obj) => (
               <CreateTr
+                key={crypto.randomUUID()}
                 id={obj.id}
                 name={obj.name}
                 email={obj.email}
                 role={obj.role}
               />
             ))}
-            <CreateTr />
           </tbody>
         </table>
         <div className="buttons">
@@ -69,6 +70,7 @@ function App() {
   );
 }
 function CreateTr({ id, name, email, role }) {
+  console.log(id, name);
   return (
     <>
       <tr className="row">
